@@ -26,7 +26,7 @@ public class CanvasPanel extends JPanel {
         super.paintComponent(g);
         g.setColor(Color.BLACK);
         for(Stroke stroke : model.getStrokes()){
-            drawStroke(g, activeStroke);
+            drawStroke(g, stroke);
         }
         if(activeStroke != null){
             drawStroke(g, activeStroke);
@@ -36,9 +36,8 @@ public class CanvasPanel extends JPanel {
     private void drawStroke(Graphics g, Stroke stroke){
         Point prev = null;
         for(Point point : stroke.getPoints()){
-            if(prev != null){
-                g.drawLine(prev.x, prev.y, point.x, point.y);
-            }
+            if(prev != null) g.drawLine(prev.x, prev.y, point.x, point.y);
+            prev = point;
         }
     }
 }

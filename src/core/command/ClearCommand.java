@@ -14,13 +14,14 @@ public class ClearCommand implements Command {
 
     @Override
     public void execute(){
-        snapshot = model.snapShot();
+        snapshot = model.snapshot();
+        model.clear();
     }
 
     @Override
     public void undo(){
         if(snapshot != null){
-            model.retores(snapshot);
+            model.restore(snapshot);
         }
     }
 }

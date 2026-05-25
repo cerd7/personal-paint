@@ -24,12 +24,12 @@ public class DrawModel {
         return Collections.unmodifiableList(strokes);
     }
 
-    public List<Stroke> snapShot(){
+    public List<Stroke> snapshot(){
         return new ArrayList<>(strokes);
     }
 
-    public void retores(List<Stroke> snapShot){
+    public void restore(List<Stroke> snapshot){
         strokes.clear();
-        strokes.addAll(snapShot);
+        strokes.addAll(snapshot);
     }
 }

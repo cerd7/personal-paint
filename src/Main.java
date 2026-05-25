@@ -1,4 +1,4 @@
-package src.core;
+package src;
 
 import javax.swing.SwingUtilities;
 
