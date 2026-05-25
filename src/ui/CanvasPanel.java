@@ -1,9 +1,14 @@
 package src.ui;
 
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import javax.swing.AbstractAction;
+import java.awt.event.ActionEvent;
+
 import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 
 import src.core.model.DrawModel;
 import src.core.model.Stroke;
@@ -11,6 +16,7 @@ import src.core.model.Stroke;
 public class CanvasPanel extends JPanel {
     private final DrawModel model;
     private Stroke activeStroke;
+    private Rectangle selectionRect;
 
     public CanvasPanel(DrawModel model){
         this.model = model;
@@ -31,6 +37,11 @@ public class CanvasPanel extends JPanel {
         if(activeStroke != null){
             drawStroke(g, activeStroke);
         }
+
+        if (selectionRect != null) {
+            g.setColor(new Color(0, 120, 215));
+            g.drawRect(selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height);
+        }
     }
 
     private void drawStroke(Graphics g, Stroke stroke){
@@ -39,5 +50,28 @@ public class CanvasPanel extends JPanel {
             if(prev != null) g.drawLine(prev.x, prev.y, point.x, point.y);
             prev = point;
         }
+    }
+
+    public void setSelectionRect(Rectangle rect) {
+        this.selectionRect = rect;
+    }
+
+    public void registerKeyBindings(Runnable onCopy, Runnable onPaste){
+        InputMap im = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = getActionMap();
+
+        im.put(KeyStroke.getKeyStroke("control C"), "copy");
+        am.put("copy", new AbstractAction() {
+            public void actionPerformed(ActionEvent e){
+                onCopy.run();
+            }
+        });
+
+        im.put(KeyStroke.getKeyStroke("control V"), "paste");
+        am.put("paste", new AbstractAction() {
+            public void actionPerformed(ActionEvent e){
+                onPaste.run();
+            }
+        });
     }
 }
