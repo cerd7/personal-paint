@@ -1,7 +1,7 @@
-package src.core.command;
+package src.com.cerd.app.core.command;
 
-import src.core.model.Stroke;
-import src.core.model.DrawModel;
+import src.com.cerd.app.core.model.Stroke;
+import src.com.cerd.app.core.model.DrawModel;
 
 public class AddStrokeCommand implements Command {
     private final DrawModel model;

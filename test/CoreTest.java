@@ -5,10 +5,10 @@ import java.awt.Point;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-import src.core.command.PasteCommand;
-import src.core.model.ClipboardBuffer;
-import src.core.model.DrawModel;
-import src.core.model.Stroke;
+import src.com.cerd.app.core.command.PasteCommand;
+import src.com.cerd.app.core.model.ClipboardBuffer;
+import src.com.cerd.app.core.model.DrawModel;
+import src.com.cerd.app.core.model.Stroke;
 
 class CoreTest {
     @Test

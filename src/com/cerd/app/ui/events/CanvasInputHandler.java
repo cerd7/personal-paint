@@ -1,4 +1,4 @@
-package src.ui.events;
+package src.com.cerd.app.ui.events;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -6,11 +6,11 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import src.core.command.AddStrokeCommand;
-import src.core.command.CommandManager;
-import src.core.model.DrawModel;
-import src.core.model.Stroke;
-import src.ui.CanvasPanel;
+import src.com.cerd.app.core.command.AddStrokeCommand;
+import src.com.cerd.app.core.command.CommandManager;
+import src.com.cerd.app.core.model.DrawModel;
+import src.com.cerd.app.core.model.Stroke;
+import src.com.cerd.app.ui.CanvasPanel;
 
 public class CanvasInputHandler {
     private final DrawModel model;

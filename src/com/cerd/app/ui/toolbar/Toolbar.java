@@ -1,14 +1,14 @@
-package src.ui.toolbar;
+package src.com.cerd.app.ui.toolbar;
 
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
-import src.core.command.ClearCommand;
-import src.core.command.CommandManager;
-import src.core.command.EraseStrokeCommand;
-import src.core.model.DrawModel;
-import src.ui.CanvasPanel;
+import src.com.cerd.app.core.command.ClearCommand;
+import src.com.cerd.app.core.command.CommandManager;
+import src.com.cerd.app.core.command.EraseStrokeCommand;
+import src.com.cerd.app.core.model.DrawModel;
+import src.com.cerd.app.ui.CanvasPanel;
 
 public class Toolbar {
     private final CommandManager commandManager;
@@ -27,9 +27,18 @@ public class Toolbar {
         toolbar.setFloatable(false);
 
         JButton undoButton = new JButton("Undo");
+        undoButton.setBorderPainted(false);
+        
         JButton redoButton = new JButton("Redo");
+        redoButton.setBorderPainted(false);
+        
         JButton eraseButton = new JButton("Erase");
+        eraseButton.setBorderPainted(false);
+        
         JButton clearButton = new JButton("Clear");
+        clearButton.setBorderPainted(false);
+        
+        //clearButton.setIcon(new ImageIcon("C:\\Users\\caio.rodrigues\\Documents\\dev\\cerddev\\personal-paint\\src\\resources\\Design sem nome.png"));
 
         undoButton.addActionListener(event -> {
             commandManager.undo();

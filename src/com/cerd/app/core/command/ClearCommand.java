@@ -1,8 +1,8 @@
-package src.core.command;
+package src.com.cerd.app.core.command;
 
 import java.util.List;
-import src.core.model.DrawModel;
-import src.core.model.Stroke;
+import src.com.cerd.app.core.model.DrawModel;
+import src.com.cerd.app.core.model.Stroke;
 
 public class ClearCommand implements Command {
     private final DrawModel model;

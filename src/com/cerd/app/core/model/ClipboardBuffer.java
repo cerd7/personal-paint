@@ -1,4 +1,4 @@
-package src.core.model;
+package src.com.cerd.app.core.model;
 
 import java.awt.Point;
 import java.util.ArrayList;

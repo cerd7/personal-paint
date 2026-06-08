@@ -1,4 +1,4 @@
-package src.core.model;
+package src.com.cerd.app.core.model;
 
 import java.util.*;
 import java.awt.Point;
@@ -7,8 +7,13 @@ import java.awt.Rectangle;
 public class Stroke {
     private final List<Point> points = new ArrayList<>();
     
+    private Rectangle cachedBounds = null;
+    private boolean isDirty = true;
+
     public void addPoint(Point point){
         points.add(point);
+        isDirty = true;
+    
     }
 
     public List<Point> getPoints(){
@@ -20,9 +25,14 @@ public class Stroke {
     }
 
     public Rectangle getBounds(){
+        if(!isDirty && cachedBounds != null) return cachedBounds;
+
         if(points.isEmpty()){
-            return new Rectangle(0,0,0,0);
+            cachedBounds = new Rectangle(0,0,0,0);
+            isDirty = false;
+            return cachedBounds;
         }
+
         int minX = points.get(0).x;
         int minY = points.get(0).y;
         int maxX = minX;
@@ -35,13 +45,15 @@ public class Stroke {
             if(p.y > maxY) maxY = p.y;        
         }
 
-        return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+        cachedBounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+        isDirty = false;
+        return cachedBounds;
     }
 
     public void translate(int dx, int dy){
-        for(int i=0;i<points.size();i++){
-            Point p = points.get(i);
-            points.set(i, new Point(p.x + dx, p.y + dy));
+        for(Point p : points){
+            p.translate(dx, dy);
         }
+        isDirty = true;
     }
 }
