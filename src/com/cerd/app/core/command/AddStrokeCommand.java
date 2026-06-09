@@ -1,14 +1,13 @@
 package src.com.cerd.app.core.command;
 
 import src.com.cerd.app.core.model.Stroke;
-import src.com.cerd.app.core.model.DrawModel;
+import src.com.cerd.app.core.model.DrawingModel;
 
-public class AddStrokeCommand implements Command {
-    private final DrawModel model;
+public class AddStrokeCommand extends AbstractDrawingCommand {
     private final Stroke stroke;
 
-    public AddStrokeCommand(DrawModel model, Stroke stroke){
-        this.model = model;
+    public AddStrokeCommand(DrawingModel model, Stroke stroke){
+        super(model);
         this.stroke = stroke;
     }
 

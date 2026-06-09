@@ -1,14 +1,13 @@
 package src.com.cerd.app.core.command;
 
-import src.com.cerd.app.core.model.DrawModel;
+import src.com.cerd.app.core.model.DrawingModel;
 import src.com.cerd.app.core.model.Stroke;
 
-public class EraseStrokeCommand implements Command {
-    private final DrawModel model;
+public class EraseStrokeCommand extends AbstractDrawingCommand {
     private Stroke removed;
 
-    public EraseStrokeCommand(DrawModel model){
-        this.model = model;
+    public EraseStrokeCommand(DrawingModel model){
+        super(model);
     }
 
     @Override

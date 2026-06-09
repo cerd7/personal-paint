@@ -3,29 +3,36 @@ package src.com.cerd.app.ui.events;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import src.com.cerd.app.core.command.AddStrokeCommand;
 import src.com.cerd.app.core.command.CommandManager;
-import src.com.cerd.app.core.model.DrawModel;
+import src.com.cerd.app.core.model.DrawingModel;
 import src.com.cerd.app.core.model.Stroke;
-import src.com.cerd.app.ui.CanvasPanel;
+import src.com.cerd.app.core.selection.BoundsSelectionPolicy;
+import src.com.cerd.app.core.selection.SelectionPolicy;
+import src.com.cerd.app.ui.CanvasSurface;
 
 public class CanvasInputHandler {
-    private final DrawModel model;
+    private final DrawingModel model;
     private final CommandManager commandManager;
-    private final CanvasPanel canvasPanel;
+    private final CanvasSurface canvasPanel;
+    private final SelectionPolicy selectionPolicy;
     private Stroke activeStroke;
 
     private Point selectionStart;
     private Rectangle selectionRect;
     private boolean isSelecting;
 
-    public CanvasInputHandler(DrawModel model, CommandManager commandManager, CanvasPanel canvasPanel){
+    public CanvasInputHandler(DrawingModel model, CommandManager commandManager, CanvasSurface canvasPanel){
+        this(model, commandManager, canvasPanel, new BoundsSelectionPolicy());
+    }
+
+    public CanvasInputHandler(DrawingModel model, CommandManager commandManager, CanvasSurface canvasPanel, SelectionPolicy selectionPolicy){
         this.model = model;
         this.commandManager = commandManager;
         this.canvasPanel = canvasPanel;
+        this.selectionPolicy = selectionPolicy;
     }
 
     public void register(){
@@ -50,12 +57,7 @@ public class CanvasInputHandler {
             public void mouseReleased(MouseEvent e) {
                 if (isSelecting){
                     if(selectionRect != null) {
-                        List<Stroke> selected = new ArrayList<>();
-                        for (Stroke stroke : model.getStrokes()) {
-                            if (stroke.intersects(selectionRect)) {
-                                selected.add(stroke);
-                            }
-                        }
+                        List<Stroke> selected = selectionPolicy.select(model.getStrokes(), selectionRect);
                         model.setSelection(selected);
                     }
                     selectionStart = null;

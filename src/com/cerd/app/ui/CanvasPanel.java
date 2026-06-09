@@ -6,11 +6,14 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-import src.com.cerd.app.core.model.DrawModel;
+import src.com.cerd.app.core.model.DrawingModel;
 import src.com.cerd.app.core.model.Stroke;
+import src.com.cerd.app.ui.render.LineStrokeRenderer;
+import src.com.cerd.app.ui.render.StrokeRenderer;
 
-public class CanvasPanel extends JPanel {
-    private final DrawModel model;
+public class CanvasPanel extends JPanel implements CanvasSurface {
+    private final DrawingModel model;
+    private final StrokeRenderer strokeRenderer;
 
     private Rectangle selectionRect;
     private BufferedImage canvasBuffer;
@@ -24,8 +27,13 @@ public class CanvasPanel extends JPanel {
     private static final java.awt.Stroke SELECTION_STROKE = 
         new BasicStroke(1.5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{5.0f}, 0.0f); 
 
-    public CanvasPanel(DrawModel model){
+    public CanvasPanel(DrawingModel model){
+        this(model, new LineStrokeRenderer());
+    }
+
+    public CanvasPanel(DrawingModel model, StrokeRenderer strokeRenderer){
         this.model = model;
+        this.strokeRenderer = strokeRenderer;
         setBackground(Color.WHITE);
 
         addComponentListener(new ComponentAdapter(){
@@ -53,8 +61,8 @@ public class CanvasPanel extends JPanel {
         Point current = new Point(point);
 
         Graphics2D g2d = activeBuffer.createGraphics();
-        configureStrokeGraphics(g2d);
-        g2d.drawLine(activeLastPoint.x, activeLastPoint.y, current.x, current.y);
+        strokeRenderer.configure(g2d);
+        strokeRenderer.drawSegment(g2d, activeLastPoint, current);
         g2d.dispose();
 
         repaintDirtyLine(activeLastPoint, current);
@@ -65,11 +73,6 @@ public class CanvasPanel extends JPanel {
         activeLastPoint = null;
         clearActiveBuffer();
         repaint();
-    }
-
-    private void configureStrokeGraphics(Graphics2D g2d){
-        g2d.setColor(Color.BLACK);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
     private void ensureActiveBuffer(){
@@ -128,14 +131,6 @@ public class CanvasPanel extends JPanel {
         }
     }
 
-    private void drawStroke(Graphics g, Stroke stroke){
-        Point prev = null;
-        for(Point point : stroke.getPoints()){
-            if(prev != null) g.drawLine(prev.x, prev.y, point.x, point.y);
-            prev = point;
-        }
-    }
-
     public void registerKeyBindings(Runnable onCopy, Runnable onPaste){
         InputMap im = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = getActionMap();
@@ -175,9 +170,9 @@ public class CanvasPanel extends JPanel {
         Graphics2D g2d = canvasBuffer.createGraphics();
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, w, h);
-        configureStrokeGraphics(g2d);
+        strokeRenderer.configure(g2d);
 
-        for(Stroke stroke : model.getStrokes()) drawStroke(g2d, stroke);
+        for(Stroke stroke : model.getStrokes()) strokeRenderer.drawStroke(g2d, stroke);
         
         g2d.dispose();
         needsBufferUpdate = false;

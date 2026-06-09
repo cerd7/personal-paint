@@ -11,6 +11,7 @@ import src.com.cerd.app.core.command.CommandManager;
 import src.com.cerd.app.core.command.PasteCommand;
 import src.com.cerd.app.core.model.ClipboardBuffer;
 import src.com.cerd.app.core.model.DrawModel;
+import src.com.cerd.app.core.model.DrawingModel;
 import src.com.cerd.app.core.model.Stroke;
 
 import src.com.cerd.app.ui.components.CustomTitleBar;
@@ -18,9 +19,9 @@ import src.com.cerd.app.ui.events.CanvasInputHandler;
 import src.com.cerd.app.ui.toolbar.Toolbar;
 
 public class DrawApp extends JFrame {
-    DrawModel model = new DrawModel();
-    CommandManager commandManager =  new CommandManager();
-    CanvasPanel canvasPanel = new CanvasPanel(model);
+    private final DrawingModel model = new DrawModel();
+    private final CommandManager commandManager =  new CommandManager();
+    private final CanvasPanel canvasPanel = new CanvasPanel(model);
 
     public DrawApp() {
         setUndecorated(true);

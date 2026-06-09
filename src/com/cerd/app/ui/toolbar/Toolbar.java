@@ -7,15 +7,15 @@ import javax.swing.SwingConstants;
 import src.com.cerd.app.core.command.ClearCommand;
 import src.com.cerd.app.core.command.CommandManager;
 import src.com.cerd.app.core.command.EraseStrokeCommand;
-import src.com.cerd.app.core.model.DrawModel;
-import src.com.cerd.app.ui.CanvasPanel;
+import src.com.cerd.app.core.model.DrawingModel;
+import src.com.cerd.app.ui.CanvasSurface;
 
 public class Toolbar {
     private final CommandManager commandManager;
-    private final DrawModel model;
-    private final CanvasPanel canvasPanel;
+    private final DrawingModel model;
+    private final CanvasSurface canvasPanel;
 
-    public Toolbar (CommandManager commandManager, DrawModel model, CanvasPanel canvasPanel){
+    public Toolbar (CommandManager commandManager, DrawingModel model, CanvasSurface canvasPanel){
         this.commandManager = commandManager;
         this.model = model;
         this.canvasPanel = canvasPanel;

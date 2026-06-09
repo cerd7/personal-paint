@@ -2,7 +2,7 @@ package src.com.cerd.app.core.model;
 
 import java.util.*;
 
-public class DrawModel {
+public class DrawModel implements DrawingModel {
     private final List<Stroke> strokes = new ArrayList<>();
     private final List<Stroke> selectedStrokes = new ArrayList<>();
 

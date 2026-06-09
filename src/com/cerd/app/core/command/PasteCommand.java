@@ -1,15 +1,14 @@
 package src.com.cerd.app.core.command;
 
 import java.util.List;
-import src.com.cerd.app.core.model.DrawModel;
+import src.com.cerd.app.core.model.DrawingModel;
 import src.com.cerd.app.core.model.Stroke;
 
-public class PasteCommand implements Command {
-    private final DrawModel model;
+public class PasteCommand extends AbstractDrawingCommand {
     private final List<Stroke> strokesToAdd;
 
-    public PasteCommand(DrawModel model, List<Stroke> strokesToAdd) {
-        this.model = model;
+    public PasteCommand(DrawingModel model, List<Stroke> strokesToAdd) {
+        super(model);
         this.strokesToAdd = strokesToAdd;
     }
 
