@@ -50,7 +50,7 @@ public class DrawApp extends JFrame {
                     List<Stroke> clones = clipboard.getClones();
                     offsetStrokesToCursor(clones, cursor);
                     commandManager.execute(new PasteCommand(model, clones));
-                    canvasPanel.repaint();
+                    canvasPanel.invalidateBuffer();
                 }
             }
         );

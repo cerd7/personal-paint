@@ -6,18 +6,31 @@ import java.awt.Rectangle;
 
 public class Stroke {
     private final List<Point> points = new ArrayList<>();
+    private final List<Point> readOnlyPoints = Collections.unmodifiableList(points);
     
-    private Rectangle cachedBounds = null;
-    private boolean isDirty = true;
+    private int minX = Integer.MAX_VALUE;
+    private int minY = Integer.MAX_VALUE;
+    private int maxX = Integer.MIN_VALUE;
+    private int maxY = Integer.MIN_VALUE;
 
     public void addPoint(Point point){
-        points.add(point);
-        isDirty = true;
-    
+        Objects.requireNonNull(point, "point");
+
+        Point copy = new Point(point);
+
+        points.add(copy);
+        includeBounds(copy.x, copy.y);
+    }
+
+    private void includeBounds(int x, int y){
+        if(x < minX) minX = x;
+        if(y < minY) minY = y;
+        if(x > maxX) maxX = x;        
+        if(y > maxY) maxY = y;
     }
 
     public List<Point> getPoints(){
-        return Collections.unmodifiableList(points);
+        return readOnlyPoints;
     }
 
     public boolean hasRenderablePoints(){
@@ -25,35 +38,34 @@ public class Stroke {
     }
 
     public Rectangle getBounds(){
-        if(!isDirty && cachedBounds != null) return cachedBounds;
-
         if(points.isEmpty()){
-            cachedBounds = new Rectangle(0,0,0,0);
-            isDirty = false;
-            return cachedBounds;
+            return new Rectangle(0,0,0,0);
         }
+        return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+    }
 
-        int minX = points.get(0).x;
-        int minY = points.get(0).y;
-        int maxX = minX;
-        int maxY = minY;
+    public boolean intersects(Rectangle rect){
+        if(rect == null || points.isEmpty()) return false;
 
-        for(Point p : points){
-            if(p.x < minX) minX = p.x;
-            if(p.y < minY) minY = p.y;
-            if(p.x > maxX) maxX = p.x;        
-            if(p.y > maxY) maxY = p.y;        
-        }
+        int rectMaxX = rect.x + rect.width;
+        int rectMaxY = rect.y + rect.height;
 
-        cachedBounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
-        isDirty = false;
-        return cachedBounds;
+        return rect.x <= maxX
+            && rectMaxX >= minX
+            && rect.y <= maxY
+            && rectMaxY >= minY;
     }
 
     public void translate(int dx, int dy){
+        if(points.isEmpty()) return;
+
         for(Point p : points){
-            p.translate(dx, dy);
+            p.translate(dx, dy);     
         }
-        isDirty = true;
+
+        minX += dx;
+        maxX += dx;
+        minY += dy;
+        maxY += dy;
     }
 }

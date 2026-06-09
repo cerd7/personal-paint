@@ -34,7 +34,7 @@ public class CanvasInputHandler {
                 if(e.isShiftDown()){
                     isSelecting = true;
                     selectionStart = e.getPoint();
-                    selectionRect = new Rectangle(selectionStart);
+                    selectionRect = new Rectangle(selectionStart.x, selectionStart.y,0,0);
                     canvasPanel.setSelectionRect(selectionRect);
                     canvasPanel.repaint();
                     return;
@@ -42,8 +42,9 @@ public class CanvasInputHandler {
 
                 isSelecting = false;
                 activeStroke = new Stroke();
-                activeStroke.addPoint(e.getPoint());
-                canvasPanel.setActiveStroke(activeStroke);
+                Point start = e.getPoint();
+                activeStroke.addPoint(start);
+                canvasPanel.beginActiveStroke(start);
             }
             
             public void mouseReleased(MouseEvent e) {
@@ -51,7 +52,7 @@ public class CanvasInputHandler {
                     if(selectionRect != null) {
                         List<Stroke> selected = new ArrayList<>();
                         for (Stroke stroke : model.getStrokes()) {
-                            if (selectionRect.intersects(stroke.getBounds())) {
+                            if (stroke.intersects(selectionRect)) {
                                 selected.add(stroke);
                             }
                         }
@@ -65,10 +66,21 @@ public class CanvasInputHandler {
                 }
                 
                 if (activeStroke != null && activeStroke.hasRenderablePoints()) {
-                    commandManager.execute(new AddStrokeCommand(model, activeStroke));
+                    Stroke completedStroke = activeStroke;
+                    activeStroke = null;
+                    canvasPanel.clearActiveStroke();
+                    commandManager.execute(new AddStrokeCommand(model, completedStroke));
+                    canvasPanel.invalidateBuffer();
+                    return;
                 }
+
+                if (activeStroke != null) {
+                    activeStroke = null;
+                    canvasPanel.clearActiveStroke();
+                    return;
+                }
+
                 activeStroke = null;
-                canvasPanel.setActiveStroke(null);
                 canvasPanel.repaint();
             }
         });
@@ -81,15 +93,16 @@ public class CanvasInputHandler {
                     int y = Math.min(selectionStart.y, e.getY());
                     int w = Math.abs(selectionStart.x - e.getX());
                     int h = Math.abs(selectionStart.y - e.getY());
-                    selectionRect = new Rectangle(x,y,w,h);
+                    selectionRect.setBounds(x,y,w,h);
                     canvasPanel.setSelectionRect(selectionRect);
                     canvasPanel.repaint();
                     return;
                 }
                 
                 if (activeStroke == null) return;
-                activeStroke.addPoint(e.getPoint());
-                canvasPanel.repaint();
+                Point currentPoint = e.getPoint();
+                activeStroke.addPoint(currentPoint);
+                canvasPanel.appendActivePoint(currentPoint);
             }
         });
     }

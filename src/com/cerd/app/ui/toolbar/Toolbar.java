@@ -42,22 +42,26 @@ public class Toolbar {
 
         undoButton.addActionListener(event -> {
             commandManager.undo();
-            canvasPanel.repaint();
+            canvasPanel.invalidateBuffer();
         });
 
         redoButton.addActionListener(event -> {
             commandManager.redo();
-            canvasPanel.repaint();
+            canvasPanel.invalidateBuffer();
         });
 
         eraseButton.addActionListener(event -> {
+            if(model.getStrokes().isEmpty()) return;
+
             commandManager.execute(new EraseStrokeCommand(model));
-            canvasPanel.repaint();
+            canvasPanel.invalidateBuffer();
         });
 
         clearButton.addActionListener(event -> {
+            if(model.getStrokes().isEmpty()) return;
+
             commandManager.execute(new ClearCommand(model));
-            canvasPanel.repaint();
+            canvasPanel.invalidateBuffer();
         });
 
         toolbar.add(undoButton);
